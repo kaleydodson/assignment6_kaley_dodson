@@ -1,0 +1,25 @@
+---
+title: "a6_task2"
+author: "Kaley Dodson"
+date: "12/7/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(here)
+
+# Read in data
+conservation_survey <- read.csv(here("data", "conservation_survey.csv"))
+```
+
+### 1. Introduction
+
+This report explores the differences in snowshoe hare sizes for juveniles observed in the Bonanza Creek Experimental Forest from 1999 - 2012 (Kielland et al. 2017). Here observations are totaled by year collected and hare weight is compared across sexes and data collection sites. The relationship between hind foot size and weight is also explored. Finally, findings are succinctly summarized.
+
+```{r}
+
+```
+
