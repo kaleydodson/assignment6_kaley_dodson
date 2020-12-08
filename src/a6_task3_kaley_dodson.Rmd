@@ -20,7 +20,7 @@ lizards <- read.csv(here("data", "lizards.csv"))
 
 ### 1. Introduction
 
-This mini-report uses lizard tail breakage data recorded at Jornada Basin Long Term Ecological Research site by David Lightfoot to compare total lengths of two species: Cnemidophorus uniparens, the Desert Grassland lizard (CNUN), and Cnemidophorus tessalatus, the Colorado Checkered lizard (CNTE). Length observations are visualized and compared by two-sample t-test test (using a significance level ($\alpha$) of 0.05) and differences are described with Cohen's *d* effect size.
+This mini-report uses lizard tail breakage data recorded at Jornada Basin Long Term Ecological Research site by David Lightfoot to compare total lengths of two species: Cnemidophorus uniparens, the Desert Grassland lizards (CNUN), and Cnemidophorus tessalatus, the Colorado Checkered lizard (CNTE). Length observations are visualized and compared by two-sample t-test test (using a significance level ($\alpha$) of 0.05) and differences are described with Cohen's *d* effect size.
 
 ### 2. Exploratory Findings & Summary
 
@@ -111,7 +111,7 @@ liz_effsize <- cohen.d (CNTE_lizards, CNUN_lizards, na.rm = TRUE)
 liz_effsize
 ```
 
-Colorado Checkered lizards (CNTE) are larger on average than Desert Grassland lizard (CNUN) (`r round(CNTE_mean,2)` $\pm$ `r round(CNTE_sd, 2)` and `r round(CNUN_mean,2)` $\pm$ `r round(CNUN_sd, 2)` g, respectively; mean $\pm$ 1 standard deviation). The actual difference in means is `r round(CNTE_mean, 2) - round(CNUN_mean, 2)` mm, which is significant (Welch's two-sample t-test: t(`r round(tidy_lizards_ttest$parameter,2)`, *p* = `r format(tidy_lizards_ttest$p.value, scientific = TRUE, digits = 3)`) and the effect size is large (Cohen's *d* = `r round(liz_effsize$estimate,2)`).
+Colorado Checkered lizards (CNTE) are larger on average than Desert Grassland lizards (CNUN) (`r round(CNTE_mean,2)` $\pm$ `r round(CNTE_sd, 2)` and `r round(CNUN_mean,2)` $\pm$ `r round(CNUN_sd, 2)` g, respectively; mean $\pm$ 1 standard deviation). The actual difference in means is `r round(CNTE_mean, 2) - round(CNUN_mean, 2)` mm, which is significant (Welch's two-sample t-test: t(`r round(tidy_lizards_ttest$parameter,2)`, *p* = `r format(tidy_lizards_ttest$p.value, scientific = TRUE, digits = 3)`) and the effect size is large (Cohen's *d* = `r round(liz_effsize$estimate,2)`).
 
 ### Citation
 
