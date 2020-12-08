@@ -61,10 +61,10 @@ survey_counts_prop %>%
 ```
 
 ```{r, include = FALSE}
-# convert entries in table columns to stored rownames
+# contingency table
 survey_ct <- survey_counts %>% 
-  drop_na %>% 
-  column_to_rownames(var = "pol_party") 
+  drop_na %>% # remove na values
+  column_to_rownames(var = "pol_party") # convert entries in table columns to stored rownames
 
 # chi-square test
 survey_x2 <- chisq.test(survey_ct)
