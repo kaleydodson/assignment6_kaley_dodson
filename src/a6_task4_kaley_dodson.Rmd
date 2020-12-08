@@ -1,0 +1,46 @@
+---
+title: "Mono Lake Levels Visualization"
+author: "Kaley Dodson"
+date: "12/8/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+
+library(tidyverse)
+library(janitor)
+library(here)
+
+# Read in data
+mono_levels <- read.csv(here("data", "mono_lake_annual_levels.csv"), skip = 5) %>% 
+  clean_names()
+```
+
+```{r, echo = FALSE, fig.cap = "**Figure 1.** Mono Lake levels (ft above sea level) over time. The black (6392 feet), orange (6377 feeet) and red (6350 feet) lines indicate critical lake levels for protecting streamflows and bird populations. The black points indicate significant events corresponding with select observations. Data: Mono Lake Committee (2017)"}
+# line graph of mono lake levels
+ggplot(data = mono_levels, aes(x = year, y = lake_level_feet_above_sea_level)) +
+  geom_line(color = "lightseagreen", size = .75) +
+  geom_ribbon(aes(ymin = -Inf, ymax = lake_level_feet_above_sea_level), fill = "lightseagreen", alpha = .5) + # fills color below data
+  scale_x_continuous(limits = c(1850,2017), breaks = c(1850, 1875, 1900, 1925, 1950, 1975, 2000), expand = c(0,0)) +
+  geom_hline(aes(yintercept = 6392)) + # adds lines indicating critical lake levels for management
+  geom_hline(aes(yintercept = 6377), color = "orange") + 
+  geom_hline(aes(yintercept = 6350), color = "red") +
+  labs(x = "Year", y = "Mono Lake Level (ft above sea level)") +
+  theme_classic() +
+  annotate(geom = "point", x = 1941, y = 6417) + # highlights and labels points of interest
+  annotate("text", x = 1965, y = 6420, label = "1941 Water Diversions Begin") +
+  annotate(geom = "point", x = 1979, y = 6373) +
+  annotate("text", x = 1963, y = 6370.5, label = "1979 Lawsuit Filed") +
+  annotate(geom = "point", x = 1983, y = 6378) +
+  annotate("text", x = 1962, y = 6382, label = "1983 Public Trust Ruling") +
+  annotate(geom = "point", x = 1994, y = 6374) +
+  annotate("text", x = 1996.5, y = 6371, label = "1994") +
+  annotate("text", x = 2004.75, y = 6367.5, label = "Decision 1631") +
+  annotate("text", x = 1868, y = 6394, label = "Management Level") + # labels highlighted lake levls
+  annotate("text", x = 1869.5, y = 6379, label = "Land Bridges Appear") +
+  annotate("text", x = 1869, y = 6352, label = "Critical Salinity Level") 
+```
+
+
+
