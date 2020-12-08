@@ -1,25 +1,81 @@
 ---
-title: "a6_task2"
+title: "Comparison of Political Affiliation & Identity as an Environmentalist"
 author: "Kaley Dodson"
 date: "12/7/2020"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 
 library(tidyverse)
+library(kableExtra)
 library(here)
+library(janitor)
+library(broom)
 
 # Read in data
-conservation_survey <- read.csv(here("data", "conservation_survey.csv"))
+conservation_survey <- read.csv(here("data", "conservation_survey.csv")) %>% 
+  clean_names()
 ```
 
 ### 1. Introduction
 
-This report explores the differences in snowshoe hare sizes for juveniles observed in the Bonanza Creek Experimental Forest from 1999 - 2012 (Kielland et al. 2017). Here observations are totaled by year collected and hare weight is compared across sexes and data collection sites. The relationship between hind foot size and weight is also explored. Finally, findings are succinctly summarized.
+This mini-report uses data from a survey conducted by Chelsea Batavia and Andrews Forest LTER to explore "Influences on charitable giving for conservation" to describe the association between respondents’ political affiliation and if they consider themselves an environmentalist. Survey responses to the prompts "I consider myself an environmentalist" and "How do you self-identify politically?" are counted, visualized in a table, and compared by chi-square test using a significance level ($\alpha$) of 0.05.
 
-```{r}
-
+```{r, include = FALSE}
+# subset of survey questions
+subset_conservation_survey <- conservation_survey %>% 
+  select(env_id, pol_or) %>% # retains variables for environmentalist identity and political orientation questions only
+  mutate(pol_party = case_when( # adds new column which contains:
+    pol_or %in% c(1, 2, 3) ~ "Conservative", # "conservative" if response is 1-3
+    pol_or %in% c(5, 6, 7) ~ "Liberal", # "liberal" if response is 5-7
+  )) 
 ```
+
+### 2. Exploratory Findings & Summary
+
+**Table 1.** Relation between identity as an environmentalist and political leaning. Values indicated are percentages with counts shown in parentheses. Data: Andrews Forest LTER Site and C. Batavia. (2019)
+
+```{r, echo = FALSE}
+# table 1 code
+
+# create counts table object
+survey_counts <- subset_conservation_survey %>% 
+  tabyl(pol_party, env_id) 
+
+# add proportions to counts table
+survey_counts_prop <- survey_counts %>% 
+  adorn_percentages() %>% # converts to percent
+  adorn_pct_formatting(digits = 2) %>% # rounds to two digits
+  adorn_ns() %>% # includes actual counts
+  drop_na() # removes na values
+
+# counts table formatting
+survey_counts_prop %>% 
+  kable(col.names = c(" ",
+                      "Yes",
+                      "No",
+                      "Unsure")) %>% 
+  kable_styling(full_width = FALSE)
+```
+
+```{r, include = FALSE}
+# convert entries in table columns to stored rownames
+survey_ct <- survey_counts %>% 
+  drop_na %>% 
+  column_to_rownames(var = "pol_party") 
+
+# chi-square test
+survey_x2 <- chisq.test(survey_ct)
+survey_x2
+# tidy model results for in-line reference
+survey_tidy <- tidy(survey_x2)
+```
+
+There is a significant association between survey respondents’ political affiliation and whether they consider themselves an environmentalist ($\chi$^2^(`r survey_tidy$parameter`) = `r round(survey_tidy$statistic,2)`, *p* = `r format(survey_tidy$p.value, scientific = TRUE, digits = 3)`). The majority of those who leaned liberal also self-identified as an environmentalist (`r survey_counts_prop$"1"[2]`) while the majority of conservative-leaning respondents specifically did not (`r survey_counts_prop$"2"[1]`).
+
+### Citation
+
+Andrews Forest LTER Site and C. Batavia. 2019. Influences on charitable giving for conservation: Online survey data of 1,331 respondents across the US, August 2017 ver 3. Environmental Data Initiative. https://doi.org/10.6073/pasta/926e6270e324a1322a900da14d38b96c
 
